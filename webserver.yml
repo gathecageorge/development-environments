@@ -1,0 +1,30 @@
+version: "2"
+services:
+    www:
+        restart: unless-stopped
+        image: gathecageorge/phalcon-apache:ubuntu-php7.3
+        ports: 
+            - "80:80"
+        volumes:
+            - ~/Projects/www:/var/www/html/
+        links:
+            - db
+    db:
+        restart: unless-stopped
+        image: mysql
+        ports: 
+            - "3306:3306"
+        command:
+            - "mysqld"
+            - "--default-authentication-plugin=mysql_native_password"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        volumes:
+            - ~/Projects/mysql-data:/var/lib/mysql
+    phpmyadmin:
+        restart: unless-stopped
+        image: phpmyadmin
+        links: 
+            - db:db
+        ports:
+            - 8000:80
